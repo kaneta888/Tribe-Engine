@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="text-align: center; padding: 100px 0;">
+    <h1
+        style="font-size: 4rem; margin-bottom: 20px; background: linear-gradient(to right, #fff, var(--text-muted)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+        重力に、逆らえ。
+    </h1>
+    <p style="font-size: 1.2rem; color: var(--text-muted); max-width: 600px; margin: 0 auto 40px;">
+        アルゴリズムに支配されない、あなただけのコミュニティ。<br>
+        ノイズのない、本物のつながりを。
+    </p>
+
+    {% if not current_user.is_authenticated %}
+    <div style="display: flex; gap: 20px; justify-content: center;">
+        <a href="{{ url_for('auth.register') }}" class="btn btn-primary"
+            style="padding: 15px 40px; font-size: 1.1rem;">はじめる</a>
+        <a href="{{ url_for('auth.login') }}" class="btn glass-panel"
+            style="padding: 15px 40px; font-size: 1.1rem;">ログイン</a>
+    </div>
+    {% else %}
+    <a href="{{ url_for('feed.feed') }}" class="btn btn-primary"
+        style="padding: 15px 40px; font-size: 1.1rem;">フィードへ移動</a>
+    {% endif %}
+</div>
+{% endblock %}

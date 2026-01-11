@@ -1,0 +1,107 @@
+/* Global Design System */
+:root {
+    /* Premium Color Palette */
+    --primary-hue: 250; /* Deep Purple */
+    --bg-dark: hsl(var(--primary-hue), 15%, 5%);
+    --bg-card: hsl(var(--primary-hue), 15%, 10%);
+    --bg-card-hover: hsl(var(--primary-hue), 15%, 15%);
+    --text-main: hsl(0, 0%, 95%);
+    --text-muted: hsl(0, 0%, 70%);
+    --accent: hsl(var(--primary-hue), 70%, 60%);
+    --accent-glow: hsla(var(--primary-hue), 70%, 60%, 0.5);
+    
+    --border-color: hsla(0, 0%, 100%, 0.1);
+    
+    /* Spacing */
+    --space-s: 8px;
+    --space-m: 16px;
+    --space-l: 24px;
+    --space-xl: 48px;
+    
+    /* Radius */
+    --radius-m: 12px;
+    --radius-l: 24px;
+}
+
+body {
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    margin: 0;
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+a {
+    color: var(--text-main);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+a:hover {
+    color: var(--accent);
+}
+
+/* Glassmorphism Utilities */
+.glass-panel {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-m);
+}
+
+.btn {
+    padding: 10px 20px;
+    border-radius: var(--radius-m);
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--accent), hsl(var(--primary-hue), 60%, 50%));
+    color: white;
+    box-shadow: 0 4px 15px var(--accent-glow);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px var(--accent-glow);
+}
+
+/* Layout */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--space-m);
+}
+
+header {
+    padding: var(--space-m) 0;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: var(--space-xl);
+}
+
+.nav-links {
+    display: flex;
+    gap: var(--space-m);
+}
+
+/* Forms */
+input, textarea, select {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+    padding: 12px;
+    border-radius: var(--radius-m);
+    width: 100%;
+    margin-bottom: var(--space-m);
+    box-sizing: border-box;
+}
+
+input:focus, textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px var(--accent-glow);
+}

@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+
+{% block title %}管理画面 - Antigravity{% endblock %}
+
+{% block content %}
+<div style="max-width: 1000px; margin: 0 auto;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+        <h2>管理ダッシュボード</h2>
+        <div class="glass-panel" style="padding: 10px 20px; display: flex; align-items: center; gap: 10px;">
+            <span style="color: var(--text-muted);">SMS残高:</span>
+            <span style="font-size: 1.5rem; font-weight: 800; color: var(--accent);">{{ current_user.sms_credits
+                }}</span>
+            {% if current_user.is_owner() %}
+            <form action="{{ url_for('admin.add_credits') }}" method="POST" style="margin: 0;">
+                <button type="submit" class="btn btn-primary"
+                    style="padding: 4px 10px; font-size: 0.8rem;">+100</button>
+            </form>
+            {% endif %}
+        </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 30px;">
+        <!-- User Management -->
+        <div>
+            <div class="glass-panel" style="padding: 24px;">
+                <h3 style="margin-bottom: 20px;">ユーザー管理</h3>
+                <div style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr style="text-align: left; border-bottom: 1px solid var(--border-color);">
+                                <th style="padding: 10px;">ユーザー</th>
+                                <th style="padding: 10px;">ロール</th>
+                                <th style="padding: 10px;">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for user in users %}
+                            <tr style="border-bottom: 1px solid var(--border-color);">
+                                <td style="padding: 10px;">
+                                    <div style="font-weight: 600;">{{ user.username }}</div>
+                                    <div style="font-size: 0.8rem; color: var(--text-muted);">{{ user.email }}</div>
+                                </td>
+                                <td style="padding: 10px;">
+                                    <span style="
+                                            padding: 2px 8px; border-radius: 10px; font-size: 0.8rem;
+                                            background: {{ 'var(--accent)' if user.role == 'owner' else ('#e74c3c' if user.role == 'admin' else ('#f1c40f' if user.role == 'paid' else '#333')) }};
+                                            color: {{ 'white' if user.role in ['owner', 'admin'] else ('black' if user.role == 'paid' else 'white') }};
+                                        ">
+                                        {{ user.role|upper }}
+                                    </span>
+                                </td>
+                                <td style="padding: 10px;">
+                                    {% if user.id != current_user.id %}
+                                    <form action="{{ url_for('admin.update_role', user_id=user.id) }}" method="POST"
+                                        style="display: flex; gap: 5px;">
+                                        <select name="role"
+                                            style="padding: 4px; font-size: 0.8rem; width: auto; margin: 0;">
+                                            <option value="free" {% if user.role=='free' %}selected{% endif %}>無料
+                                            </option>
+                                            <option value="paid" {% if user.role=='paid' %}selected{% endif %}>有料
+                                            </option>
+                                            <option value="admin" {% if user.role=='admin' %}selected{% endif %}>管理者
+                                            </option>
+                                        </select>
+                                        <button type="submit" class="btn glass-panel"
+                                            style="padding: 4px 8px; font-size: 0.8rem;">更新</button>
+                                    </form>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- SMS Emergency Broadcast -->
+        <div>
+            <div class="glass-panel" style="padding: 24px; border: 1px solid #e74c3c;">
+                <h3 style="color: #e74c3c; margin-bottom: 10px;">🚨 緊急SMS配信</h3>
+                <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 20px;">
+                    SMS受信をONにしている全ユーザーに緊急メッセージを送信します ({{ opted_in_count }} 名)。
+                    <br>コスト: 1クレジット / 人
+                </p>
+
+                <form method="POST" action="{{ url_for('admin.send_sms') }}">
+                    <textarea name="message" placeholder="緊急メッセージを入力..." rows="4" style="margin-bottom: 20px;"
+                        required></textarea>
+
+                    <div
+                        style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: var(--radius-m); margin-bottom: 20px;">
+                        <div style="display: flex; justify-content: space-between; font-size: 0.9rem;">
+                            <span>送信対象:</span>
+                            <span>{{ opted_in_count }} 名</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; font-size: 0.9rem;">
+                            <span>概算コスト:</span>
+                            <span>{{ opted_in_count }} クレジット</span>
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 5px;">
+                            確認のため "SEND" と入力してください:
+                        </label>
+                        <input type="text" name="confirm_send" pattern="SEND" required style="border-color: #e74c3c;">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary"
+                        style="width: 100%; background: #e74c3c; box-shadow: 0 4px 15px rgba(231, 76, 60, 0.4);">
+                        SMS一斉配信
+                    </button>
+                </form>
+            </div>
+
+            <!-- SMS Log -->
+            <div class="glass-panel" style="padding: 24px; margin-top: 20px;">
+                <h4>配信履歴</h4>
+                {% for log in sms_logs %}
+                <div style="padding: 10px 0; border-bottom: 1px solid var(--border-color); font-size: 0.9rem;">
+                    <div style="color: var(--text-muted);">{{ log.timestamp.strftime('%Y-%m-%d %H:%M') }}</div>
+                    <div>{{ log.content }}</div>
+                    <div style="font-size: 0.8rem; color: var(--accent);">対象: {{ log.target_count }}名 | コスト: {{ log.cost
+                        }}</div>
+                </div>
+                {% else %}
+                <div style="color: var(--text-muted); font-size: 0.9rem;">履歴はありません。</div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

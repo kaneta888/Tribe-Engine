@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block title %}設定 - Antigravity{% endblock %}
+
+{% block content %}
+<div style="max-width: 600px; margin: 0 auto;">
+    <h2 style="margin-bottom: 30px;">ユーザー設定</h2>
+
+    <div class="glass-panel" style="padding: 30px; margin-bottom: 30px;">
+        <h3 style="margin-bottom: 20px;">プロフィール情報</h3>
+        <form method="POST" action="{{ url_for('user.update_profile') }}">
+            <div>
+                <label for="username"
+                    style="display: block; margin-bottom: 5px; color: var(--text-muted);">ユーザー名</label>
+                <input type="text" value="{{ current_user.username }}" disabled style="opacity: 0.7;">
+            </div>
+
+            <div>
+                <label for="email" style="display: block; margin-bottom: 5px; color: var(--text-muted);">メールアドレス</label>
+                <input type="email" id="email" name="email" value="{{ current_user.email }}" required>
+            </div>
+
+            <div>
+                <label for="phone_number"
+                    style="display: block; margin-bottom: 5px; color: var(--text-muted);">電話番号</label>
+                <input type="tel" id="phone_number" name="phone_number" value="{{ current_user.phone_number or '' }}"
+                    placeholder="+819012345678">
+            </div>
+
+            <div style="margin-bottom: 20px;">
+                <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                    <input type="checkbox" name="sms_opt_in" {% if current_user.sms_opt_in %}checked{% endif %}
+                        style="width: auto; margin: 0;">
+                    <span>管理者からの緊急SMS通知を受け取る</span>
+                </label>
+            </div>
+
+            <button type="submit" class="btn btn-primary">変更を保存</button>
+        </form>
+    </div>
+
+    <div class="glass-panel" style="padding: 30px;">
+        <h3 style="margin-bottom: 20px;">サブスクリプション状態</h3>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <div style="font-size: 1.2rem; font-weight: 600;">
+                    現在のプラン:
+                    <span style="color: var(--accent);">{{ current_user.role|upper }}</span>
+                </div>
+                {% if current_user.role == 'free' %}
+                <p style="color: var(--text-muted);">アップグレードして限定コンテンツを楽しみましょう。</p>
+                {% else %}
+                <p style="color: var(--text-muted);">コミュニティのご支援ありがとうございます。</p>
+                {% endif %}
+            </div>
+
+            {% if current_user.role == 'free' %}
+            <form action="{{ url_for('user.toggle_sub') }}" method="POST">
+                <button type="submit" class="btn btn-primary">有料会員になる (デモ)</button>
+            </form>
+            {% elif current_user.role == 'paid' %}
+            <form action="{{ url_for('user.toggle_sub') }}" method="POST">
+                <button type="submit" class="btn glass-panel" style="color: #ff6b6b;">解約する</button>
+            </form>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

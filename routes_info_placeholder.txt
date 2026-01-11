@@ -1,0 +1,13 @@
+from flask import Blueprint, render_template, redirect, url_for, flash, request
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import login_user, logout_user, login_required
+from app import db, login_manager
+from models import User
+
+# Define Blueprint directly here for simplicity in single-file-like structure, 
+# but best practice is to move to a routes folder. 
+# For this step, I'll modify app.py to include these or create a routes/auth.py.
+# I will create 'routes/auth.py' and import it in app.py.
+
+# This file content is intended for routes/auth.py
+pass

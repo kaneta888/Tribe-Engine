@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Antigravity{% endblock %}</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Noto+Sans+JP:wght@400;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+    <style>
+        body {
+            font-family: 'Inter', 'Noto Sans JP', sans-serif;
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body>
+    <header class="glass-panel">
+        <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
+            <div class="logo">
+                <a href="{{ url_for('index') }}" style="font-weight: 800; font-size: 1.5rem;">ANTIGRAVITY</a>
+            </div>
+            <nav class="nav-links">
+                {% if current_user.is_authenticated %}
+                <a href="{{ url_for('feed.feed') }}">フィード</a>
+                <a href="{{ url_for('profile') }}">設定</a>
+                {% if current_user.is_admin() %}
+                <a href="{{ url_for('admin.dashboard') }}" style="color: var(--accent);">管理画面</a>
+                {% endif %}
+                <a href="{{ url_for('auth.logout') }}">ログアウト</a>
+                {% else %}
+                <a href="{{ url_for('auth.login') }}">ログイン</a>
+                <a href="{{ url_for('auth.register') }}" class="btn btn-primary">登録</a>
+                {% endif %}
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class="flashes">
+            {% for category, message in messages %}
+            <div class="alert alert-{{ category }} glass-panel" style="padding: 1rem; margin-bottom: 1rem;">{{ message
+                }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+
+</html>
