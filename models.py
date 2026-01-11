@@ -13,12 +13,17 @@ class User(UserMixin, db.Model):
     
     # SMS & Profile
     phone_number = db.Column(db.String(20), nullable=True)
+    avatar_path = db.Column(db.String(200), nullable=True)  # Profile icon path
     sms_opt_in = db.Column(db.Boolean, default=False)
     
     # Admin/Owner specific
     sms_credits = db.Column(db.Integer, default=0)  # Prepaid credits
     
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    # Password reset
+    reset_token = db.Column(db.String(100), nullable=True)
+    reset_token_expiry = db.Column(db.DateTime, nullable=True)
 
     def is_paid_user(self):
         return self.role in ['paid', 'admin', 'owner']

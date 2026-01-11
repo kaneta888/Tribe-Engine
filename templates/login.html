@@ -23,6 +23,10 @@
             <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;">ログイン</button>
         </form>
 
+        <p style="text-align: center; margin-top: 15px; font-size: 0.9rem;">
+            <a href="{{ url_for('auth.forgot_password') }}" style="color: var(--accent);">パスワードを忘れた方</a>
+        </p>
+
         <p style="text-align: center; margin-top: 20px; font-size: 0.9rem; color: var(--text-muted);">
             アカウントをお持ちでないですか？ <a href="{{ url_for('auth.register') }}" style="color: var(--accent);">新規登録</a>
         </p>

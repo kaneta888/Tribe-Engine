@@ -5,6 +5,13 @@ from models import User
 
 user_bp = Blueprint('user', __name__)
 
+@user_bp.route('/members')
+@login_required
+def members():
+    from models import User
+    users = User.query.order_by(User.created_at.desc()).all()
+    return render_template('members.html', users=users)
+
 @user_bp.route('/settings')
 @login_required
 def settings():

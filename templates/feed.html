@@ -38,17 +38,34 @@
             style="padding: 24px; margin-bottom: 24px; animation: fadeIn 0.5s ease;">
             <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
                 <div style="display: flex; align-items: center; gap: 10px;">
-                    <div style="font-weight: 600;">{{ post.author.username }}</div>
-                    {% if post.author.role == 'owner' %}
-                    <span
-                        style="background: var(--accent); color: white; padding: 2px 8px; border-radius: 10px; font-size: 0.7rem;">オーナー</span>
-                    {% elif post.author.role == 'admin' %}
-                    <span
-                        style="background: #e74c3c; color: white; padding: 2px 8px; border-radius: 10px; font-size: 0.7rem;">管理者</span>
-                    {% elif post.author.role == 'paid' %}
-                    <span
-                        style="background: #f1c40f; color: black; padding: 2px 8px; border-radius: 10px; font-size: 0.7rem;">PRO</span>
-                    {% endif %}
+                    <!-- Avatar -->
+                    <div
+                        style="width: 40px; height: 40px; border-radius: 50%; overflow: hidden; background: linear-gradient(135deg, var(--accent), var(--accent-dark)); flex-shrink: 0;">
+                        {% if post.author.avatar_path %}
+                        <img src="{{ url_for('static', filename='uploads/' + post.author.avatar_path) }}"
+                            alt="{{ post.author.username }}" style="width: 100%; height: 100%; object-fit: cover;">
+                        {% else %}
+                        <div
+                            style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; font-weight: 700; color: white;">
+                            {{ post.author.username[0].upper() }}
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <div style="font-weight: 600; display: flex; align-items: center; gap: 6px;">
+                            {{ post.author.username }}
+                            {% if post.author.role == 'owner' %}
+                            <span
+                                style="background: var(--accent); color: white; padding: 2px 8px; border-radius: 10px; font-size: 0.7rem;">オーナー</span>
+                            {% elif post.author.role == 'admin' %}
+                            <span
+                                style="background: #e74c3c; color: white; padding: 2px 8px; border-radius: 10px; font-size: 0.7rem;">管理者</span>
+                            {% elif post.author.role == 'paid' %}
+                            <span
+                                style="background: #f1c40f; color: black; padding: 2px 8px; border-radius: 10px; font-size: 0.7rem;">PRO</span>
+                            {% endif %}
+                        </div>
+                    </div>
                 </div>
                 <div style="font-size: 0.8rem; color: var(--text-muted);">
                     {{ post.created_at.strftime('%Y-%m-%d %H:%M') }}

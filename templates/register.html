@@ -7,7 +7,7 @@
     <div class="glass-panel" style="padding: 40px;">
         <h2 style="text-align: center; margin-bottom: 30px;">コミュニティに参加</h2>
 
-        <form method="POST" action="{{ url_for('auth.register') }}">
+        <form method="POST" action="{{ url_for('auth.register') }}" enctype="multipart/form-data">
             <div>
                 <label for="username"
                     style="display: block; margin-bottom: 5px; font-size: 0.9rem; color: var(--text-muted);">ユーザー名</label>
@@ -24,6 +24,12 @@
                 <label for="password"
                     style="display: block; margin-bottom: 5px; font-size: 0.9rem; color: var(--text-muted);">パスワード</label>
                 <input type="password" id="password" name="password" required>
+            </div>
+
+            <div>
+                <label for="avatar"
+                    style="display: block; margin-bottom: 5px; font-size: 0.9rem; color: var(--text-muted);">プロフィール画像（任意）</label>
+                <input type="file" id="avatar" name="avatar" accept="image/*">
             </div>
 
             <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;">アカウント作成</button>

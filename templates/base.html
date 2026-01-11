@@ -29,10 +29,11 @@
             <div class="logo">
                 <a href="{{ url_for('index') }}" style="font-weight: 800; font-size: 1.5rem;">ANTIGRAVITY</a>
             </div>
-            <nav class="nav-links">
+            <nav style="display: flex; gap: 30px; align-items: center;">
                 {% if current_user.is_authenticated %}
-                <a href="{{ url_for('feed.feed') }}">フィード</a>
-                <a href="{{ url_for('profile') }}">設定</a>
+                <a href="{{ url_for('feed.feed') }}" class="nav-link">フィード</a>
+                <a href="{{ url_for('user.members') }}" class="nav-link">メンバー</a>
+                <a href="{{ url_for('user.settings') }}" class="nav-link">設定</a>
                 {% if current_user.is_admin() %}
                 <a href="{{ url_for('admin.dashboard') }}" style="color: var(--accent);">管理画面</a>
                 {% endif %}
