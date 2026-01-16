@@ -1,6 +1,6 @@
 import os
 import secrets
-from flask import Blueprint, render_template, redirect, url_for, flash, request, current_app
+from flask import Blueprint, render_template, redirect, url_for, flash, request, current_app, jsonify
 from flask_login import login_required, current_user
 from werkzeug.utils import secure_filename
 from extensions import db
@@ -72,6 +72,14 @@ def toggle_like(post_id):
         db.session.add(new_like)
         
     db.session.commit()
+    
+    if request.is_json or request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return jsonify({
+            'status': 'success',
+            'is_liked': not bool(like),
+            'like_count': post.like_count
+        })
+        
     return redirect(url_for('feed.feed', _anchor=f'post-{post_id}'))
 
 @feed_bp.route('/post/<int:post_id>/comment', methods=['POST'])
@@ -103,6 +111,13 @@ def toggle_save(post_id):
         db.session.add(new_save)
         
     db.session.commit()
+    
+    if request.is_json or request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return jsonify({
+            'status': 'success',
+            'is_saved': not bool(saved)
+        })
+
     return redirect(url_for('feed.feed', _anchor=f'post-{post_id}'))
 
 @feed_bp.route('/post/<int:post_id>/delete', methods=['POST'])
